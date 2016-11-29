@@ -1,0 +1,6 @@
+{"questions":[
+	{"question": "Hur snygg är Dave?", "choices": ["1", "2", "3", "4.5"], "correctAnswer":0},
+	{"question": "Vem är Dave?", "choices": ["Davve", "Dubbel D"], "correctAnswer":0},
+	{"question": "Vad är Dave?", "choices": ["Svart", "Vit", "Rosa", "Brun"], "correctAnswer":1},
+	{"question": "Vad är meningen med Dave?", "choices": ["Leva lyckligt", "Leave och låta dö"], "correctAnswer":1}
+]}

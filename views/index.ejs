@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Cool quiz</title>
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src='/socket.io/socket.io.js'></script>
+    <script src='/scripts/scripts.js'></script>
+  </head>
+  <body>
+    <div class='container-fluid'>
+      <div class='row'>
+        <div class='span12'>
+          <h1>Coolt quiz</h1>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='span4'>
+          <div class='well'>
+            <h3>High Score</h3>
+            <div class='connectedUsers'>
+
+            </div>
+          </div>
+        </div>
+        <div class='span8'>
+          <div class='hero-unit'>
+            <div class="show_index">
+              <h2>Welcome to Consid Quiz</h2>
+              <p>
+                Good luck!
+              </p>
+              <button id='btnJoin' class='btn btn-primary'>Start the Quiz</button>
+            </div>
+            <div class='show_questions' style='display:none;'>
+              <h2>Questions</h2>
+              <div class="pagination">
+                <ul class='questions_pagination'>
+                  <!-- filled using jQuery -->
+                </ul>
+              </div>
+              <div id='question'>
+                <h3 id='question_title'></h3>
+                <div id='question_options'></div>
+                <div style="text-align: right;">
+                  <button id='btnNext' class='btn btn-success' onclick="next_question()" >Next</button>
+                  <button id='btnSubmit' class='btn btn-primary' onclick="check_correct_answers()" style='display:none;'>Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
