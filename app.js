@@ -62,7 +62,6 @@ io.sockets.on('connection', function(socket){
 			var invalidCharInName = checkForMischief(args.name);
 			var invalidNameLength = checkIfNameTooLong(args.name);
 			var invalidNumberOfPoints = checkIfNumberOfPointsValid(args.points)
-			console.log("invalidCharInName: " + invalidCharInName);
 			if(invalidCharInName){
 				var errorMessage = "Don't be a bad hen. You know that strings like '" + invalidCharInName + 
         						   "' isn't allowed. Your script-kiddie attempt has been logged.";
@@ -110,7 +109,7 @@ function checkForMischief(str){
 }
 
 function checkIfNameTooLong(str){
-	return str.length <= NAME_MAX_LENGTH;
+	return str.length > NAME_MAX_LENGTH;
 }
 
 
