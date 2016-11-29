@@ -41,9 +41,8 @@ socket.on('updateHighscore', function(data){
   }
 });  
 
-socket.on('invalidInput', function(invalidCharInName){
-  alert("Don't be a bad hen. You know that strings like '" + invalidCharInName + 
-        "' isn't allowed. Your script-kiddie attempt has been logged.")
+socket.on('errorMessage', function(errorMessage){
+  alert(errorMessage)
 }); 
 
 function get_question(number){

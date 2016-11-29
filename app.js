@@ -59,10 +59,18 @@ io.sockets.on('connection', function(socket){
 		//socket.username = name;
 		try{			
 			var invalidCharInName = checkForMischief(args.name);
+			var invalidNumberOfPoints = checkIfNumberOfPointsValid(args.points)
 			console.log("invalidCharInName: " + invalidCharInName);
 			if(invalidCharInName){
-				console.log('User tried to use character: ' + invalidCharInName + ' in name input')
-				socket.emit('invalidInput', invalidCharInName);
+				var errorMessage = "Don't be a bad hen. You know that strings like '" + invalidCharInName + 
+        						   "' isn't allowed. Your script-kiddie attempt has been logged.";
+				console.log('User tried to use character: ' + invalidCharInName + ' in name input');
+				socket.emit('errorMessage', errorMessage);
+			} else if(invalidNumberOfPoints){
+				var errorMessage = "Don't be a bad hen. There arent enough questions to get more than a hundred points." +
+								   "You tried tried to get '" + args.points + "'. Your script-kiddie attempt has been logged."
+				console.log('User tried to cheat with: ' + args.points + ' number of points');
+				socket.emit('errorMessage', errorMessage);
 			} else{
 				highscore.push({'name' : args.name , 'points' : args.points});
 				highscore.sort(comparePoints);
@@ -94,5 +102,10 @@ function checkForMischief(str){
 		} 
 	};
 	return ''; 	
+}
+
+function checkIfNumberOfPointsValid(points){
+	console.log(points);
+	return points > 100; 
 }
 
