@@ -41,7 +41,8 @@ var highscore = [{'name' : 'Fredrik' , 'points' : 9999},
 				 {'name' : 'Robert' , 'points' : -5},
 				 {'name' : 'Philip' , 'points' : -9999}
 				];
-var blacklist = ['<', '>', '/', '\\', 'script', '-', '%', '(', ')'];
+var CHAR_BLACKLIST = ['<', '>', '/', '\\', 'script', '-', '%', '(', ')'];
+var NAME_MAX_LENGTH = 25;
 
 var io = require('socket.io').listen(app.listen(port));
 
@@ -59,12 +60,16 @@ io.sockets.on('connection', function(socket){
 		//socket.username = name;
 		try{			
 			var invalidCharInName = checkForMischief(args.name);
+			var invalidNameLength = checkIfNameTooLong(args.name);
 			var invalidNumberOfPoints = checkIfNumberOfPointsValid(args.points)
 			console.log("invalidCharInName: " + invalidCharInName);
 			if(invalidCharInName){
 				var errorMessage = "Don't be a bad hen. You know that strings like '" + invalidCharInName + 
         						   "' isn't allowed. Your script-kiddie attempt has been logged.";
 				console.log('User tried to use character: ' + invalidCharInName + ' in name input');
+				socket.emit('errorMessage', errorMessage);
+			} else if(invalidNameLength){
+				var errorMessage = "Name is too long, max 25 characters allowed."
 				socket.emit('errorMessage', errorMessage);
 			} else if(invalidNumberOfPoints){
 				var errorMessage = "Don't be a bad hen. There arent enough questions to get more than a hundred points." +
@@ -95,8 +100,8 @@ function comparePoints(a, b){
 }
 
 function checkForMischief(str){
-	for (var i = 0; i < blacklist.length; i++) {
-		var badChar = blacklist[i];
+	for (var i = 0; i < CHAR_BLACKLIST.length; i++) {
+		var badChar = CHAR_BLACKLIST[i];
 		if (str.includes(badChar)){
 			return badChar;
 		} 
@@ -104,8 +109,13 @@ function checkForMischief(str){
 	return ''; 	
 }
 
+function checkIfNameTooLong(str){
+	return str.length <= NAME_MAX_LENGTH;
+}
+
+
 function checkIfNumberOfPointsValid(points){
 	console.log(points);
-	return points > 100; 
+	return points > 100; //Supposed to be points > questions.length when there is enough questions
 }
 
