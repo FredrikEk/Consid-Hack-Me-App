@@ -58,7 +58,8 @@ io.sockets.on('connection', function(socket){
 	});
 	socket.on('addUserToHighscore', function(args){
 		//socket.username = name;
-		try{			
+		try{
+			console.log(args.name);
 			var invalidCharInName = checkForMischief(args.name);
 			var invalidNameLength = checkIfNameTooLong(args.name);
 			var invalidNumberOfPoints = checkIfNumberOfPointsValid(args.points)
@@ -112,9 +113,7 @@ function checkIfNameTooLong(str){
 	return str.length > NAME_MAX_LENGTH;
 }
 
-
 function checkIfNumberOfPointsValid(points){
-	console.log(points);
 	return points > 100; //Supposed to be points > questions.length when there is enough questions
 }
 
