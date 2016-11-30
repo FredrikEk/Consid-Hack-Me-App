@@ -7,7 +7,7 @@ var express = require('express')
   , path    = require('path');
 
 var app = express();
-var port = 3000;
+var port = 80;
 
 
 // all environments
