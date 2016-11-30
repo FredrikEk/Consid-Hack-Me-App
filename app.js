@@ -41,7 +41,7 @@ var highscore = [{'name' : 'Fredrik' , 'points' : 9999},
 				 {'name' : 'Robert' , 'points' : -5},
 				 {'name' : 'Philip' , 'points' : -9999}
 				];
-var CHAR_BLACKLIST = ['<', '>', '/', '\\', 'script', '-', '%', '(', ')'];
+var CHAR_BLACKLIST = ['<', '>', '/', '\\', 'script', '-', '%', '(', ')', '}', '{', ':'];
 var NAME_MAX_LENGTH = 25;
 
 var io = require('socket.io').listen(app.listen(port));
