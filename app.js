@@ -51,7 +51,7 @@ setTimeout(function(){ process.exit(1) }, 900000);
 
 io.sockets.on('connection', function(socket){
 
-	console.log('New connection attempt from ' + socket.remoteAddress]);
+	console.log('New connection attempt from ');
 	io.sockets.emit('initHighscore', { highscoreList : highscore });
 
 	socket.on('initQuiz', function(){
@@ -81,7 +81,7 @@ io.sockets.on('connection', function(socket){
 			} else{
 				highscore.push({'name' : args.name , 'points' : args.points});
 				highscore.sort(comparePoints);
-				console.log(args.name + " with ip " + socket.remoteAddress + " added to highscore with points: " + args.points);
+				console.log(args.name + " added to highscore with points: " + args.points);
 				io.sockets.emit('updateHighscore', { highscoreList : highscore, updateType: 'add' });
 			}
 		} catch (e){
