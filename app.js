@@ -51,7 +51,7 @@ setTimeout(function(){ process.exit(1) }, 900000);
 
 io.sockets.on('connection', function(socket){
 
-	console.log('New connection attempt');
+	console.log('New connection attempt from ' + request.headers['x-forwarded-for']);
 	io.sockets.emit('initHighscore', { highscoreList : highscore });
 
 	socket.on('initQuiz', function(){
