@@ -107,5 +107,5 @@ function check_correct_answers(){
       points++;
     }
   });
-  socket.emit('addUserToHighscore', {'name' : username, 'points' : points});
+  socket.emit('addUserToHighscore', {'name' : username, 'points' : points, 'authHash' : createAuthHash(points)});
 }

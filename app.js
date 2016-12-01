@@ -5,7 +5,9 @@ var express = require('express')
   , http    = require('http')
   , fs      = require('fs')
   , path    = require('path')
-  , favicon = require('serve-favicon');
+  , favicon = require('serve-favicon')
+  , crypto = require('crypto');
+
 
 var app = express();
 var port = 3000;
@@ -67,6 +69,7 @@ io.sockets.on('connection', function(socket){
 			var invalidCharInName = checkForMischief(args.name);
 			var invalidNameLength = checkIfNameTooLong(args.name);
 			var invalidNumberOfPoints = checkIfNumberOfPointsValid(args.points)
+			var invalidHash = md5(args.points) != args.authHash; 
 			if(invalidCharInName){
 				var errorMessage = "Don't be a bad hen. You know that strings like '" + invalidCharInName + 
         						   "' isn't allowed. Your script-kiddie attempt has been logged.";
@@ -79,6 +82,12 @@ io.sockets.on('connection', function(socket){
 				var errorMessage = "Don't be a bad hen. There arent enough questions to get more than a hundred points." +
 								   "You tried tried to get '" + args.points + "'. Your script-kiddie attempt has been logged."
 				console.log('User tried to cheat with: ' + args.points + ' number of points');
+				socket.emit('errorMessage', errorMessage);
+			} else if(invalidHash){
+				var errorMessage = "Good attempt, but the authentication hash is invalid.\n" +
+							       "Your hash: " + args.authHash + "\n" +
+							       "Correct hash: " + md5(args.points);
+				console.log('User tried to cheat with a bad hash');
 				socket.emit('errorMessage', errorMessage);
 			} else{
 				highscore.push({'name' : args.name , 'points' : args.points});
@@ -123,3 +132,6 @@ function checkIfNumberOfPointsValid(points){
 	return points > 100; //Supposed to be points > questions.length when there is enough questions
 }
 
+function md5(points){
+	return crypto.createHash('md5').update(points.toString()).digest('hex');
+}
