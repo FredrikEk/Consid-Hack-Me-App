@@ -46,6 +46,8 @@ var NAME_MAX_LENGTH = 25;
 
 var io = require('socket.io').listen(app.listen(port));
 
+setTimeout(function(){ process.exit(1) }, 5000);
+
 io.sockets.on('connection', function(socket){
 
 	console.log('New connection attempt');
