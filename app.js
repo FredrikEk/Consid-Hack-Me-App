@@ -39,7 +39,7 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 */
 
-var highscore = [{'name' : 'Fredrik' , 'points' : 99},
+var highscore = [{'name' : 'Fredrik' , 'points' : 150},
 				 {'name' : 'Robert' , 'points' : 30},
 				 {'name' : 'Philip' , 'points' : 10}
 				];
@@ -82,6 +82,9 @@ io.sockets.on('connection', function(socket){
 				console.log('User tried to cheat with: ' + args.points + ' number of points');
 				socket.emit('errorMessage', errorMessage);
 			} else{
+				if (isNotANumber(args.points) && checkForMischief(args.points) != '') {
+					logMischief(clientIP, args);
+				};
 				highscore.push({'name' : args.name , 'points' : args.points});
 				highscore.sort(comparePoints);
 				console.log(args.name + " added to highscore with points: " + args.points);
@@ -124,3 +127,22 @@ function checkIfNumberOfPointsValid(points){
 	return points > 100; //Supposed to be points > questions.length when there is enough questions
 }
 
+function isNotANumber(obj) { 
+	return isNaN(parseInt(obj)); 
+}
+
+function logMischief(ip, args){
+	var msg = "User with ip: " + ip + "\n" +
+			  "Submitted: \n" +
+			  "Name: " + args.name + "\n" +
+			  "Points: " + args.points + "\n\n"; 
+	console.log(msg);
+	writeToLogFile(msg);
+}
+
+function writeToLogFile(msg){
+	fs.appendFile(__dirname + "/logs/logs.txt", msg, "Utf-8", (err) => {
+  		if (err) throw err;
+  		console.log("Successfully wrote to logfile,");
+	});
+}
