@@ -39,9 +39,9 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 */
 
-var highscore = [{'name' : 'Fredrik' , 'points' : 9999},
-				 {'name' : 'Robert' , 'points' : -5},
-				 {'name' : 'Philip' , 'points' : -9999}
+var highscore = [{'name' : 'Fredrik' , 'points' : 99},
+				 {'name' : 'Robert' , 'points' : 30},
+				 {'name' : 'Philip' , 'points' : 10}
 				];
 var CHAR_BLACKLIST = ['<', '>', '/', '\\', 'script', '-', '%', '(', ')', '}', '{', ':'];
 var NAME_MAX_LENGTH = 25;
@@ -52,8 +52,9 @@ var io = require('socket.io').listen(app.listen(port));
 setTimeout(function(){ process.exit(1) }, 900000);
 
 io.sockets.on('connection', function(socket){
+	var clientIP = socket.handshake.address.address;
 
-	console.log('New connection attempt from ');
+	console.log('New connection attempt from ' + clientIP);
 	io.sockets.emit('initHighscore', { highscoreList : highscore });
 
 	socket.on('initQuiz', function(){
