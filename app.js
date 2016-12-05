@@ -52,7 +52,7 @@ var io = require('socket.io').listen(app.listen(port));
 setTimeout(function(){ process.exit(1) }, 900000);
 
 io.sockets.on('connection', function(socket){
-	var clientIP = socket.handshake.headers['x-forwarded-for'];
+	var clientIP = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
 
 	console.log('New connection attempt from ' + clientIP);
 	io.sockets.emit('initHighscore', { highscoreList : highscore });
