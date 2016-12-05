@@ -24,6 +24,7 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(__dirname + '/public/favicon.ico'));
+app.enable('trust proxy');
 
 // development only
 if ('development' == app.get('env')) {
@@ -52,7 +53,7 @@ var io = require('socket.io').listen(app.listen(port));
 setTimeout(function(){ process.exit(1) }, 900000);
 
 io.sockets.on('connection', function(socket){
-	var clientIP = socket.handshake.address.address;
+	var clientIP = socket.handshake.headers['x-forwarded-for'];
 
 	console.log('New connection attempt from ' + clientIP);
 	io.sockets.emit('initHighscore', { highscoreList : highscore });
