@@ -24,7 +24,6 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.enable('trust proxy');
 
 // development only
 if ('development' == app.get('env')) {
