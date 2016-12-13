@@ -41,9 +41,9 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 */
 
-var highscore = [{'name' : 'Fredrik' , 'points' : 9999},
-				 {'name' : 'Robert' , 'points' : -5},
-				 {'name' : 'Philip' , 'points' : -9999}
+var highscore = [{'name' : 'Fredrik' , 'points' : 150},
+				 {'name' : 'Robert' , 'points' : 30},
+				 {'name' : 'Philip' , 'points' : 10}
 				];
 var CHAR_BLACKLIST = ['<', '>', '/', '\\', 'script', '-', '%', '(', ')', '}', '{', ':'];
 var NAME_MAX_LENGTH = 25;
@@ -54,8 +54,8 @@ var io = require('socket.io').listen(app.listen(port));
 setTimeout(function(){ process.exit(1) }, 900000);
 
 io.sockets.on('connection', function(socket){
-
-	console.log('New connection attempt from ');
+	var clientIP = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+	console.log('New connection attempt from ' + clientIP);
 	io.sockets.emit('initHighscore', { highscoreList : highscore });
 
 	socket.on('initQuiz', function(){
@@ -90,6 +90,9 @@ io.sockets.on('connection', function(socket){
 				console.log('User tried to cheat with a bad hash');
 				socket.emit('errorMessage', errorMessage);
 			} else{
+				if (isNotANumber(args.points) && checkForMischief(args.points) != '') {
+					logMischief(clientIP, args);
+				};
 				highscore.push({'name' : args.name , 'points' : args.points});
 				highscore.sort(comparePoints);
 				console.log(args.name + " added to highscore with points: " + args.points);
@@ -99,13 +102,6 @@ io.sockets.on('connection', function(socket){
 			console.log('Error in addUserToHighscore: ', e);
 		}	
 	});
-
-	/*socket.on('disconnect', function(){
-		console.log(socket.username + " has disconnected");
-		var index = users.indexOf(socket.username);
-		users.splice(index, 1);
-		io.sockets.emit('updateUserList', {user:socket.username, connectionType:'delete'});
-	});*/
 });
 
 function comparePoints(a, b){
@@ -115,7 +111,7 @@ function comparePoints(a, b){
 function checkForMischief(str){
 	for (var i = 0; i < CHAR_BLACKLIST.length; i++) {
 		var badChar = CHAR_BLACKLIST[i];
-		if (str.includes(badChar)){
+		if (!str.isNullOrEmpty && str.includes(badChar)){
 			return badChar;
 		} 
 	};
@@ -132,6 +128,32 @@ function checkIfNumberOfPointsValid(points){
 	return points > 100; //Supposed to be points > questions.length when there is enough questions
 }
 
+
 function md5(points){
 	return crypto.createHash('md5').update(points.toString()).digest('hex');
+}
+
+function isNotANumber(obj) { 
+	return isNaN(parseInt(obj)); 
+}
+
+function logMischief(ip, args){
+	var msg = "Timestamp: " + new Date().toISOString() + "\n" +
+			  "IP: " + ip + "\n" +
+			  "Submitted: \n" +
+			  "Name: " + args.name + "\n" +
+			  "Points: " + args.points + "\n\n"; 
+	console.log(msg);
+	writeToLogFile(msg);
+}
+
+function writeToLogFile(msg){
+	fs.appendFile(__dirname + "/logs/logs.txt", msg, "Utf-8", (err) => {
+  		if (err) throw err;
+  		console.log("Successfully wrote to logfile,");
+	});
+}
+
+function isNullOrEmpty(str){
+	return str === null || str === undefined || str === '';
 }

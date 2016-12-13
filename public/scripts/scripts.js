@@ -48,7 +48,7 @@ socket.on('errorMessage', function(errorMessage){
 function get_question(number){
   var index = number - 1;
   var question = questions[index];
-  $("#question_title").text("").text(question.question);
+  $("#question_title").text("").text(number + ". " + question.question);
   $("#question_options").html("");
   $.each(question.choices, function(i, choice){
     $("#question_options").append("<div><input id='option" + i + "' class='answer' data-questionnr='" + number + "' data-option='" + i + "' type='radio' name='questionoption'/> " + choice + "</div>");
