@@ -110,7 +110,7 @@ function comparePoints(a, b){
 function checkForMischief(str){
 	for (var i = 0; i < CHAR_BLACKLIST.length; i++) {
 		var badChar = CHAR_BLACKLIST[i];
-		if (str.includes(badChar)){
+		if (!str.isNullOrEmpty && str.includes(badChar)){
 			return badChar;
 		} 
 	};
@@ -132,7 +132,8 @@ function isNotANumber(obj) {
 }
 
 function logMischief(ip, args){
-	var msg = "User with ip: " + ip + "\n" +
+	var msg = "Timestamp: " + new Date().toISOString() + "\n" +
+			  "IP: " + ip + "\n" +
 			  "Submitted: \n" +
 			  "Name: " + args.name + "\n" +
 			  "Points: " + args.points + "\n\n"; 
@@ -145,4 +146,8 @@ function writeToLogFile(msg){
   		if (err) throw err;
   		console.log("Successfully wrote to logfile,");
 	});
+}
+
+function isNullOrEmpty(str){
+	return str === null || str === undefined || str === '';
 }
