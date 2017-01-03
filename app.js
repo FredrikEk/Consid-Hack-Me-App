@@ -84,9 +84,7 @@ io.sockets.on('connection', function(socket){
 				console.log('User tried to cheat with: ' + args.points + ' number of points');
 				socket.emit('errorMessage', errorMessage);
 			} else if(invalidHash){
-				var errorMessage = "Good attempt, but the authentication hash is invalid.\n" +
-							       "Your hash: " + args.authHash + "\n" +
-							       "Correct hash: " + md5(args.points);
+				var errorMessage = "Good attempt, but the authentication hash is invalid.";
 				console.log('User tried to cheat with a bad hash');
 				socket.emit('errorMessage', errorMessage);
 			} else{
