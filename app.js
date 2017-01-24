@@ -8,7 +8,7 @@ var express = require('express')
   , favicon = require('serve-favicon');
 
 var app = express();
-var port = 3000;
+var port = 3002;
 
 
 // all environments
